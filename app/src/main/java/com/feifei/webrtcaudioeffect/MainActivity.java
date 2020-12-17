@@ -12,10 +12,8 @@ import android.widget.Button;
 
 import com.feifei.webrtcaudioeffect.AudioEffect.NoiseSuppressionUtils;
 
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,11 +26,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    private static String TAG = "MainActivity";
+    private static String TAG = "AudioEffect";
 
     private final int GrantCode = 1;
-    private Button testFile;
-    private Button startRecord, stopRecord;
+    private Button nsFileTest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,8 +79,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void grantPermission(){
-        testFile=(Button)findViewById(R.id.testFile);
-        testFile.setOnClickListener(this);
+        nsFileTest=(Button)findViewById(R.id.nsFileTest);
+        nsFileTest.setOnClickListener(this);
 
     }
 
@@ -92,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String root = getExternalFilesDir("").getAbsolutePath();
         switch (v.getId()){
             /* 测试噪声抑制对音频文件的效果 */
-            case R.id.testFile:
+            case R.id.nsFileTest:
                 ExecutorService testFileThreadExecutor = Executors.newSingleThreadExecutor();
                 testFileThreadExecutor.execute(()->{
                     try {
@@ -104,23 +101,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         /* 配置NoiseSuppressionUtils */
                         NoiseSuppressionUtils noiseSuppressionUtils = new NoiseSuppressionUtils();
                         long nsId = noiseSuppressionUtils.nsCreate();
-                        int nsInit = noiseSuppressionUtils.nsInit(nsId, 16000);
-                        Log.d(TAG, "testFile>> nsInit: " + nsInit);
-                        int nsSetPolicy = noiseSuppressionUtils.nsSetPolicy(nsId, 2);
-                        Log.d(TAG, "testFile>> nsSetPolicy: " + nsSetPolicy);
+                        noiseSuppressionUtils.nsInit(nsId, 16000);
+                        noiseSuppressionUtils.nsSetPolicy(nsId, 2);
 
-                        int nsMinBufferSize = NoiseSuppressionUtils.getMinBufferSize(16000);
+                        int nsMinBufferSize = NoiseSuppressionUtils.get10msBufferSizeInByte(16000);
 
-                        short[] inputData = new short[nsMinBufferSize];
-                        short[] outputData = new short[nsMinBufferSize];
+                        short[] inputData = new short[nsMinBufferSize/2];
+                        short[] outputData = new short[nsMinBufferSize/2];
 
                         for (File inFile : inFiles.listFiles()){
-
                             InputStream inputStream = new FileInputStream(inFile);
                             OutputStream outputStream = new FileOutputStream(outFiles.getAbsolutePath() + File.separator + inFile.getName());
 
-                            byte inputTemp[] = new byte[nsMinBufferSize * 2];
-                            byte outputTemp[] = new byte[nsMinBufferSize * 2];
+                            byte inputTemp[] = new byte[nsMinBufferSize];
+                            byte outputTemp[] = new byte[nsMinBufferSize];
                             int ret = 0;
                             while ((ret = inputStream.read(inputTemp)) > 0){
                                 /*字节转化*/
@@ -140,6 +134,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }
 
                         noiseSuppressionUtils.nsFree(nsId);
+                        Log.d(TAG, "ns file test finish");
                     }catch (IOException e) {
                         e.printStackTrace();
                     }

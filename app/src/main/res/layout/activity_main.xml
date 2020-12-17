@@ -4,37 +4,10 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <LinearLayout
-        android:orientation="horizontal"
+    <Button
+        android:text="NS文件测试"
+        android:textAllCaps="false"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <Button
-            android:text="测试文件"
-            android:textAllCaps="false"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/testFile" />
-    </LinearLayout>
-    <View
-        android:background="@color/colorPrimaryDark"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"/>
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <Button
-            android:text="开始录音"
-            android:textAllCaps="false"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/startRecord" />
-
-        <Button
-            android:text="停止录音"
-            android:textAllCaps="false"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/stopRecord" />
-    </LinearLayout>
+        android:layout_height="wrap_content"
+        android:id="@+id/nsFileTest" />
 </LinearLayout>

@@ -6,8 +6,8 @@ public class NoiseSuppressionUtils {
         System.loadLibrary("webrtc-noise-suppression");
     }
 
-    public static int getMinBufferSize(int frequency){
-        return 10 * frequency / 1000;
+    public static int get10msBufferSizeInByte(int frequency){
+        return 10 * frequency / 1000 * 2;
     }
 
     public native long nsCreate();

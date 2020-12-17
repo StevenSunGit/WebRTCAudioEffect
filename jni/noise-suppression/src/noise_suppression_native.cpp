@@ -42,7 +42,7 @@ extern "C" JNIEXPORT jint JNICALL Java_com_feifei_webrtcaudioeffect_AudioEffect_
     return WebRtcNs_set_policy(handle, mode);
 }
 
-extern "C" JNIEXPORT jint JNICALL Java_com_feifei_webrtcaudioeffect_AudioEffect_NoiseSuppressionUtils_nsProcess(JNIEnv *env, jobject thiz, jlong nsHandler, jshortArray spframe, jint num_bands, jshortArray outframe) {
+extern "C" JNIEXPORT jint JNICALL Java_com_feifei_webrtcaudioeffect_AudioEffect_NoiseSuppressionUtils_nsProcess(JNIEnv *env, jobject thiz, jlong nsHandler, jshortArray spframe, jint numBands, jshortArray outframe) {
     NsHandle *handle = (NsHandle *) nsHandler;
     if (handle == nullptr) {
         return -3;
@@ -51,7 +51,7 @@ extern "C" JNIEXPORT jint JNICALL Java_com_feifei_webrtcaudioeffect_AudioEffect_
     jshort *coutframe = env->GetShortArrayElements(outframe, nullptr);
 
     WebRtcNs_Analyze(handle, &cspframe[0]);
-    WebRtcNs_Process(handle, &cspframe, num_bands, &coutframe);
+    WebRtcNs_Process(handle, &cspframe, numBands, &coutframe);
 
     env->ReleaseShortArrayElements(spframe, cspframe, 0);
     env->ReleaseShortArrayElements(outframe, coutframe, 0);
