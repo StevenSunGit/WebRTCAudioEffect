@@ -35,7 +35,7 @@ extern "C" JNIEXPORT jint JNICALL Java_com_feifei_webrtcaudioeffect_AudioEffect_
         WebRtcAecm_Free((void*)aecmID);
         return -1;
     }
-    return 0;
+    return status;
 }
 
 extern "C" JNIEXPORT jint JNICALL Java_com_feifei_webrtcaudioeffect_AudioEffect_AcousticEchoCancellerMobileUtils_aecmProcess(JNIEnv *env, jobject thiz, jlong aecmID, jshortArray nearInput, jshortArray farInput, jshortArray output) {
