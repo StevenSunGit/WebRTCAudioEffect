@@ -57,7 +57,7 @@ extern "C" JNIEXPORT jint JNICALL Java_com_feifei_webrtcaudioeffect_AudioEffect_
     jshort *inputData = env->GetShortArrayElements(inputBuffer, nullptr);
     jshort *outputData = env->GetShortArrayElements(outBuffer, nullptr);
 
-    int ret = WebRtcAgc_Process((void*)agcID, (const int16_t *const *) &inputData, numbands, sampleRate,(int16_t *const *) &outputData, inMicLevel, &outMicLevel, echo, &saturationWarning);
+    int ret = WebRtcAgc_Process((void*)agcID, (const int16_t *const *) &inputData, numbands, 160,(int16_t *const *) &outputData, inMicLevel, &outMicLevel, echo, &saturationWarning);
 
     if (ret == 0) {
         env->ReleaseShortArrayElements(inputBuffer, inputData, 0);
