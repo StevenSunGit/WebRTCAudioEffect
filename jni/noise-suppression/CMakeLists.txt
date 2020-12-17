@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.4.1)
-project(webrtc-noise-suppression)
+project(noise-suppression)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -Wall -std=c++11 -fexceptions -fpermissive -fpic")
 
@@ -8,7 +8,7 @@ link_directories(${PROJECT_SOURCE_DIR}/libs/${ANDROID_ABI}/)
 link_directories($ENV{EXTRA_LIB_DIR})
 
 set(SOURCE_FILES
-        src/noise_suppression_native.cpp
+        src/Android_JNI.cpp
         src/noise_suppression.c)
 
 add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES})

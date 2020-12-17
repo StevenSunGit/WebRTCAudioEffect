@@ -1,13 +1,8 @@
 package com.feifei.webrtcaudioeffect.AudioEffect;
 
 public class NoiseSuppressionUtils {
-    /* 加载消噪库 */
     static {
-        System.loadLibrary("webrtc-noise-suppression");
-    }
-
-    public static int get10msBufferSizeInByte(int frequency){
-        return 10 * frequency / 1000 * 2;
+        System.loadLibrary("noise-suppression");
     }
 
     public native long nsCreate();

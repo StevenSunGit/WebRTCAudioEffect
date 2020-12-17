@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.feifei.webrtcaudioeffect.AudioEffect.AudioEffectUtils;
 import com.feifei.webrtcaudioeffect.AudioEffect.NoiseSuppressionUtils;
 
 import java.io.File;
@@ -104,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         noiseSuppressionUtils.nsInit(nsId, 16000);
                         noiseSuppressionUtils.nsSetPolicy(nsId, 2);
 
-                        int nsMinBufferSize = NoiseSuppressionUtils.get10msBufferSizeInByte(16000);
+                        int nsMinBufferSize = AudioEffectUtils.get10msBufferSizeInByte(16000);
 
                         short[] inputData = new short[nsMinBufferSize/2];
                         short[] outputData = new short[nsMinBufferSize/2];
