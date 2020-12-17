@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static String TAG = "AudioEffect";
 
     private final int GrantCode = 1;
-    private Button nsFileTest, vadFileTest, agcFileTest;
+    private Button nsFileTest, vadFileTest, agcFileTest, aecFileTest, aecmFileTest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +90,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         agcFileTest = (Button)findViewById(R.id.agcFileTest);
         agcFileTest.setOnClickListener(this);
+
+        aecFileTest = (Button)findViewById(R.id.aecFileTest);
+        aecFileTest.setOnClickListener(this);
+
+        aecmFileTest = (Button)findViewById(R.id.aecmFileTest);
+        aecmFileTest.setOnClickListener(this);
     }
 
     @Override
@@ -226,6 +232,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         e.printStackTrace();
                     }
                 });
+                break;
+            case R.id.aecFileTest:
+                break;
+            case R.id.aecmFileTest:
                 break;
             default:
                 break;

@@ -22,4 +22,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/agcFileTest" />
+    <Button
+        android:text="AEC文件测试"
+        android:textAllCaps="false"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/aecFileTest" />
+    <Button
+        android:text="AECM文件测试"
+        android:textAllCaps="false"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/aecmFileTest" />
 </LinearLayout>

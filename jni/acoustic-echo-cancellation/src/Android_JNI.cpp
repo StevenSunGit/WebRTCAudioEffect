@@ -54,7 +54,7 @@ extern "C" JNIEXPORT int JNICALL Java_com_feifei_webrtcaudioeffect_AudioEffect_A
         webrtc::WebRtcAec_Free((void*)aecID);
         return -1;
     }
-    
+
     memcpy(nearBuffer, outputBuffer, 160 * sizeof(int16_t));
 
     env->ReleaseFloatArrayElements(nearInput, nearBuffer, 0);
