@@ -1,8 +1,7 @@
+#include "com_feifei_webrtcaudioeffect_jni_AudioEffect.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
-//#include "inc/com_feifei_webrtcaudioeffect_jni_AudioEffect.h.h"
-#include <jni.h>
 #ifndef nullptr
 #define nullptr 0
 #endif
@@ -27,6 +26,6 @@ extern "C" JNIEXPORT jint JNICALL Java_com_feifei_webrtcaudioeffect_AudioEffect_
     return 0;
 }
 
-extern "C" JNIEXPORT jint JNICALL Java_com_feifei_webrtcaudioeffect_AudioEffect_AutomaticGainControl_agcFree(JNIEnv *env, jobject thiz) {
-    return 0;
+extern "C" JNIEXPORT void JNICALL Java_com_feifei_webrtcaudioeffect_AudioEffect_AutomaticGainControl_agcFree(JNIEnv *env, jobject thiz) {
+    ;
 }
