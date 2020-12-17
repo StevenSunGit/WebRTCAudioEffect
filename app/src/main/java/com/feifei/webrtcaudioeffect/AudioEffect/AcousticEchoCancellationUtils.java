@@ -5,7 +5,7 @@ public class AcousticEchoCancellationUtils {
         System.loadLibrary("acoustic-echo-cancellation");
     }
 
-    public native long aecCreate();
+    public native long aecCreate(int sampleRate);
     public native int aecProcess();
-    public native void aecFree();
+    public native void aecFree(long aecID);
 }
