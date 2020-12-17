@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.feifei.webrtcaudioeffect.AudioEffect.AcousticEchoCancellationUtils;
+import com.feifei.webrtcaudioeffect.AudioEffect.AcousticEchoCancellerMobileUtils;
 import com.feifei.webrtcaudioeffect.AudioEffect.AudioEffectUtils;
 import com.feifei.webrtcaudioeffect.AudioEffect.AutomaticGainControl;
 import com.feifei.webrtcaudioeffect.AudioEffect.NoiseSuppressionUtils;
@@ -281,6 +282,45 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 });
                 break;
             case R.id.aecmFileTest:
+                ExecutorService aecmFileTest = Executors.newSingleThreadExecutor();
+                aecmFileTest.execute(()->{
+                    try {
+                        File inFiles = new File(root + File.separator + "inFiles");
+                        File outFiles = new File(root + File.separator + "outFiles");
+
+                        AcousticEchoCancellerMobileUtils acousticEchoCancellerMobileUtils = new AcousticEchoCancellerMobileUtils();
+                        long aecmID = acousticEchoCancellerMobileUtils.aecmCreate();
+                        acousticEchoCancellerMobileUtils.aecmInit(aecmID, 16000);
+                        acousticEchoCancellerMobileUtils.aecmSetConfig(aecmID, 2);
+                        int aecmMinBufferSize = AudioEffectUtils.get10msBufferSizeInByte(16000);
+                        short[] inputShort = new short[aecmMinBufferSize/2];
+                        short[] outputShort = new short[aecmMinBufferSize/2];
+                        for (File inFile : inFiles.listFiles()){
+                            InputStream inputStream = new FileInputStream(inFile);
+                            OutputStream outputStream = new FileOutputStream(outFiles.getAbsolutePath() + File.separator + inFile.getName());
+
+                            byte inputByte[] = new byte[aecmMinBufferSize];
+                            byte outputByte[] = new byte[aecmMinBufferSize];
+                            int ret = 0;
+                            while ((ret = inputStream.read(inputByte)) > 0){
+                                ByteBuffer.wrap(inputByte).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().get(inputShort);
+
+                                int result = acousticEchoCancellerMobileUtils.aecmProcess(aecmID, inputShort, inputShort, outputShort);
+                                Log.d(TAG, "result: " + result);
+
+                                ByteBuffer.wrap(outputByte).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().put(outputShort);
+                                outputStream.write(outputByte);
+                                outputStream.flush();
+                            }
+                            inputStream.close();
+                            outputStream.close();
+                        }
+
+                        acousticEchoCancellerMobileUtils.aecmFree(aecmID);
+                    }catch (IOException e){
+                        e.printStackTrace();
+                    }
+                });
                 break;
             default:
                 break;
