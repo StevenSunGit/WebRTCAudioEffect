@@ -50,7 +50,7 @@ extern "C" JNIEXPORT jint JNICALL Java_com_feifei_webrtcaudioeffect_AudioEffect_
 }
 
 extern "C" JNIEXPORT jint JNICALL Java_com_feifei_webrtcaudioeffect_AudioEffect_AutomaticGainControl_agcProcess(JNIEnv *env, jobject thiz, jlong agcID, jshortArray inputBuffer, int numbands, int sampleRate ,jshortArray outBuffer) {
-    int inMicLevel, outMicLevel = -1;
+    int inMicLevel = 0, outMicLevel = -1;
     uint8_t saturationWarning = 1;                 //是否有溢出发生，增益放大以后的最大值超过了65536
     int16_t echo = 0;                                 //增益放大是否考虑回声影响
 
