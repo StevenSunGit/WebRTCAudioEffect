@@ -10,7 +10,7 @@
 #endif
 
 /* 日志输出 */
-#define LOG_TAG "jni_NoiseSuppressionNative"
+#define LOG_TAG "jni_AutomaticGainControl"
 #define ALOGV(...) __android_log_print(ANDROID_LOG_VERBOSE, LOG_TAG, __VA_ARGS__)
 #define ALOGD(...) __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG,__VA_ARGS__)
 #define ALOGI(...) __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
@@ -59,15 +59,14 @@ extern "C" JNIEXPORT jint JNICALL Java_com_feifei_webrtcaudioeffect_AudioEffect_
 
     int ret = WebRtcAgc_Process((void*)agcID, (const int16_t *const *) &inputData, numbands, sampleRate,(int16_t *const *) &outputData, inMicLevel, &outMicLevel, echo, &saturationWarning);
 
-    env->ReleaseShortArrayElements(inputBuffer, inputData, 0);
-    env->ReleaseShortArrayElements(outBuffer, outputData, 0);
-
-    if (ret != 0) {
+    if (ret == 0) {
+        env->ReleaseShortArrayElements(inputBuffer, inputData, 0);
+        env->ReleaseShortArrayElements(outBuffer, outputData, 0);
+    } else{
         printf("failed in WebRtcAgc_Process\n");
         WebRtcAgc_Free((void*)agcID);
-        return -1;
     }
-    return 0;
+    return ret;
 }
 
 extern "C" JNIEXPORT void JNICALL Java_com_feifei_webrtcaudioeffect_AudioEffect_AutomaticGainControl_agcFree(JNIEnv *env, jobject thiz, jlong agcID) {
