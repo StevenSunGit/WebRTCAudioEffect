@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.feifei.webrtcaudioeffect.AudioEffect.AudioEffectUtils;
+import com.feifei.webrtcaudioeffect.AudioEffect.AutomaticGainControl;
 import com.feifei.webrtcaudioeffect.AudioEffect.NoiseSuppressionUtils;
 import com.feifei.webrtcaudioeffect.AudioEffect.VoiceActivityDetectionUtils;
 
@@ -31,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static String TAG = "AudioEffect";
 
     private final int GrantCode = 1;
-    private Button nsFileTest, vadFileTest;
+    private Button nsFileTest, vadFileTest, agcFileTest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +87,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         vadFileTest = (Button)findViewById(R.id.vadFileTest);
         vadFileTest.setOnClickListener(this);
+
+        agcFileTest = (Button)findViewById(R.id.agcFileTest);
+        agcFileTest.setOnClickListener(this);
     }
 
     @Override
@@ -155,6 +159,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         voiceActivityDetectionUtils.vadSetMode(vadId, 3);
                         int vadMinBufferSize = AudioEffectUtils.get10msBufferSizeInByte(16000);
                         short[] inputShort = new short[vadMinBufferSize/2];
+
                         for (File inFile : inFiles.listFiles()){
                             InputStream inputStream = new FileInputStream(inFile);
 
@@ -169,6 +174,53 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }
                         voiceActivityDetectionUtils.vadFree(vadId);
                         Log.d(TAG, "vad file test finish");
+
+                    }catch (IOException e){
+                        e.printStackTrace();
+                    }
+                });
+                break;
+            case R.id.agcFileTest:
+                ExecutorService agcFileTest = Executors.newSingleThreadExecutor();
+                agcFileTest.execute(()->{
+                    try {
+                        File inFiles = new File(root + File.separator + "inFiles");
+                        File outFiles = new File(root + File.separator + "outFiles");
+
+                        AutomaticGainControl automaticGainControl = new AutomaticGainControl();
+                        long agcID = automaticGainControl.agcCreate();
+                        automaticGainControl.agcInit(agcID, 2, 16000);
+                        automaticGainControl.agcSetConfig(agcID, 9, 3);
+
+                        int agcMinBufferSize = AudioEffectUtils.get10msBufferSizeInByte(16000);
+
+                        short[] inputShort = new short[agcMinBufferSize/2];
+                        short[] outputShort = new short[agcMinBufferSize/2];
+
+                        for (File inFile : inFiles.listFiles()){
+                            InputStream inputStream = new FileInputStream(inFile);
+                            OutputStream outputStream = new FileOutputStream(outFiles.getAbsolutePath() + File.separator + inFile.getName());
+
+                            byte inputByte[] = new byte[agcMinBufferSize];
+                            byte outputByte[] = new byte[agcMinBufferSize];
+
+                            int ret = 0;
+                            while ((ret = inputStream.read(inputByte)) > 0){
+                                ByteBuffer.wrap(inputByte).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().get(inputShort);
+
+                                int result = automaticGainControl.agcProcess(agcID, inputShort, 1, 16000, outputShort);
+                                Log.d(TAG, "result: " + result);
+
+                                /* 保存处理后文件 */
+                                ByteBuffer.wrap(outputByte).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().put(outputShort);
+                                outputStream.write(outputByte);
+                                outputStream.flush();
+                            }
+                            inputStream.close();
+                            outputStream.close();
+                        }
+
+                        automaticGainControl.agcFree(agcID);
 
                     }catch (IOException e){
                         e.printStackTrace();
