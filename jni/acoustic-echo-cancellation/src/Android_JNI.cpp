@@ -1,6 +1,7 @@
 #include "com_feifei_webrtcaudioeffect_jni_AudioEffect.h"
 #include "echo_cancellation.h"
 #include <android/log.h>
+#include <string.h>
 
 /* 日志输出 */
 #define LOG_TAG "jni_NoiseSuppressionNative"
@@ -34,7 +35,32 @@ extern "C" JNIEXPORT int JNICALL Java_com_feifei_webrtcaudioeffect_AudioEffect_A
     return status;
 }
 
-extern "C" JNIEXPORT int JNICALL Java_com_feifei_webrtcaudioeffect_AudioEffect_AcousticEchoCancellationUtils_aecProcess(JNIEnv *env, jobject thiz) {
+extern "C" JNIEXPORT int JNICALL Java_com_feifei_webrtcaudioeffect_AudioEffect_AcousticEchoCancellationUtils_aecProcess(JNIEnv *env, jobject thiz, jlong aecID, jfloatArray nearInput, jfloatArray farInput, jfloatArray output) {
+    int16_t msInSndCardBuf = 40;
+    jfloat *nearBuffer = env->GetFloatArrayElements(nearInput, nullptr);
+    jfloat *farBuffer = env->GetFloatArrayElements(farInput, nullptr);
+    jfloat *outputBuffer = env->GetFloatArrayElements(output, nullptr);
+
+    int retFar = webrtc::WebRtcAec_BufferFarend((void*)aecID, farBuffer, 160);
+    if(retFar != 0){
+        ALOGE("WebRtcAec_BufferFarend() failed.\n");
+        webrtc::WebRtcAec_Free((void*)aecID);
+        return -1;
+    }
+
+    int ret = webrtc::WebRtcAec_Process((void*)aecID, (const float* const*)nearBuffer, 1, (float* const* )outputBuffer, 160, msInSndCardBuf, 0);
+    if (ret != 0) {
+        ALOGE("failed in WebRtcAecm_Process\n");
+        webrtc::WebRtcAec_Free((void*)aecID);
+        return -1;
+    }
+    
+    memcpy(nearBuffer, outputBuffer, 160 * sizeof(int16_t));
+
+    env->ReleaseFloatArrayElements(nearInput, nearBuffer, 0);
+    env->ReleaseFloatArrayElements(farInput, farBuffer, 0);
+    env->ReleaseFloatArrayElements(output, outputBuffer, 0);
+
     return 0;
 }
 
