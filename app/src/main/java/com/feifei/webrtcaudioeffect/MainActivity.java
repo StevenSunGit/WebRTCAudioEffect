@@ -140,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         noiseSuppressionUtils.nsFree(nsId);
                         Log.d(TAG, "ns file test finish");
                     }catch (IOException e) {
-                        e.printStackTrace();ns
+                        e.printStackTrace();
                     }
                 });
                 break;
