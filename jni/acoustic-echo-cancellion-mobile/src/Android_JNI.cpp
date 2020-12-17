@@ -1,6 +1,6 @@
 #include <android/log.h>
-#include "com_feifei_webrtcaudioeffect_jni_AudioEffect.h"
-
+//#include "inc/com_feifei_webrtcaudioeffect_jni_AudioEffect.h"
+#include <jni.h>
 /* 日志输出 */
 #define LOG_TAG "jni_NoiseSuppressionNative"
 #define ALOGV(...) __android_log_print(ANDROID_LOG_VERBOSE, LOG_TAG, __VA_ARGS__)
