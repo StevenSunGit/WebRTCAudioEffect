@@ -15,8 +15,10 @@ JNIEXPORT jint JNICALL Java_com_feifei_webrtcaudioeffect_AudioEffect_VoiceActivi
 
 JNIEXPORT jint JNICALL Java_com_feifei_webrtcaudioeffect_AudioEffect_VoiceActivityDetectionUtils_vadProcess(JNIEnv *env, jobject thiz, jlong vadID, jint sampleRate, jshortArray buffer);
 
-JNIEXPORT void JNICALL Java_com_feifei_webrtcaudioeffect_AudioEffect_VoiceActivityDetectionUtils_vadFree(JNIEnv *env, jobject thiz, jlong vadID)
+JNIEXPORT void JNICALL Java_com_feifei_webrtcaudioeffect_AudioEffect_VoiceActivityDetectionUtils_vadFree(JNIEnv *env, jobject thiz, jlong vadID);
 
 #ifdef __cplusplus
 }
+#endif
+
 #endif

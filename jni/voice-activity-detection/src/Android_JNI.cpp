@@ -2,8 +2,7 @@
 #include <memory>
 #include <cassert>
 #include "webrtc_vad.hpp"
-#include <jni.h>
-//#include "com_feifei_webrtcaudioeffect_jni_AudioEffect.h"
+#include "com_feifei_webrtcaudioeffect_jni_AudioEffect.h"
 
 extern "C" JNIEXPORT jlong JNICALL Java_com_feifei_webrtcaudioeffect_AudioEffect_VoiceActivityDetectionUtils_vadCreate(JNIEnv *env, jobject thiz) {
     VadInst* vad = WebRtcVad_Create();

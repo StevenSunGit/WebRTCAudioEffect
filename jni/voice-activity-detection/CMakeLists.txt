@@ -72,7 +72,7 @@ add_definitions(-DWTF_USE_DYNAMIC_ANNOTATIONS=1)
 add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE)
 
 file(GLOB_RECURSE FILES_SOURCES "src/*.cpp")
-file(GLOB_RECURSE FILES_INCLUDE "src/*.hpp")
+file(GLOB_RECURSE FILES_INCLUDE "src/*.hpp" "inc/com_feifei_webrtcaudioeffect_jni_AudioEffect.h")
 
 ADD_LIBRARY(${PROJECT_NAME} SHARED ${FILES_INCLUDE} ${FILES_SOURCES})
 
