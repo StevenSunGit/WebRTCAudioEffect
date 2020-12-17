@@ -1,10 +1,11 @@
-#include "com_android_aec_util_WebRtcUtil.h"
 #include <stdint.h>
 #include <time.h>
 #include <pthread.h>
 #include <android/log.h>
 #include <string.h>
-#include <audio_aec.h>
+#include "audio_aec.h"
+
+#include "com_feifei_webrtcaudioeffect_jni_AudioEffect.h"
 
 extern "C" JNIEXPORT jlong JNICALL Java_com_feifei_webrtcaudioeffect_AudioEffect_AcousticEchoCancellationUtils_aecCreate(JNIEnv *env, jobject thiz) {
     return 0;

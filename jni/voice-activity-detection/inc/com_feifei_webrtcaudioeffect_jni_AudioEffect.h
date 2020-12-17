@@ -20,5 +20,3 @@ JNIEXPORT void JNICALL Java_com_feifei_webrtcaudioeffect_AudioEffect_VoiceActivi
 #ifdef __cplusplus
 }
 #endif
-
-#endif //WEBRTCAUDIOEFFECT_COM_FEIFEI_WEBRTCAUDIOEFFECT_JNI_AUDIOEFFECT_H
