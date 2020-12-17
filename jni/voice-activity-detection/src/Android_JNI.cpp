@@ -17,7 +17,7 @@ extern "C" JNIEXPORT jint JNICALL Java_com_feifei_webrtcaudioeffect_AudioEffect_
     return WebRtcVad_set_mode((VadInst*)vadID, mode);
 }
 
-extern "C" JNIEXPORT jint JNICALL Java_com_feifei_webrtcaudioeffect_AudioEffect_VoiceActivityDetectionUtils_vadSetMode(JNIEnv *env, jobject thiz, jlong vadID, jint sampleRate, jshortArray buffer) {
+extern "C" JNIEXPORT jint JNICALL Java_com_feifei_webrtcaudioeffect_AudioEffect_VoiceActivityDetectionUtils_vadProcess(JNIEnv *env, jobject thiz, jlong vadID, jint sampleRate, jshortArray buffer) {
     auto pArray = env->GetShortArrayElements(buffer, nullptr);
     auto size = env->GetArrayLength(buffer);
     return WebRtcVad_Process((VadInst*)vadID, 16000, pArray, size);
