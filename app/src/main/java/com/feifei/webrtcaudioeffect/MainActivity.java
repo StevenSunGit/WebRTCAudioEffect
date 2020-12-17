@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.feifei.webrtcaudioeffect.AudioEffect.AcousticEchoCancellationUtils;
 import com.feifei.webrtcaudioeffect.AudioEffect.AudioEffectUtils;
 import com.feifei.webrtcaudioeffect.AudioEffect.AutomaticGainControl;
 import com.feifei.webrtcaudioeffect.AudioEffect.NoiseSuppressionUtils;
@@ -234,6 +235,50 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 });
                 break;
             case R.id.aecFileTest:
+                ExecutorService aecFileTest = Executors.newSingleThreadExecutor();
+                aecFileTest.execute(()->{
+                    try {
+                        File inFiles = new File(root + File.separator + "inFiles");
+                        File outFiles = new File(root + File.separator + "outFiles");
+
+                        AcousticEchoCancellationUtils acousticEchoCancellationUtils = new AcousticEchoCancellationUtils();
+                        long aecID = acousticEchoCancellationUtils.aecCreate();
+                        acousticEchoCancellationUtils.aecInit(aecID, 16000);
+                        acousticEchoCancellationUtils.aecSetConfig(aecID, 1);
+
+                        int aecMinBufferSize = AudioEffectUtils.get10msBufferSizeInByte(16000);
+                        float[] inputFloat = new float[aecMinBufferSize/4];
+                        float[] outputFloat = new float[aecMinBufferSize/4];
+
+                        for (File inFile : inFiles.listFiles()){
+                            InputStream inputStream = new FileInputStream(inFile);
+                            OutputStream outputStream = new FileOutputStream(outFiles.getAbsolutePath() + File.separator + inFile.getName());
+
+                            byte inputByte[] = new byte[aecMinBufferSize];
+                            byte outputByte[] = new byte[aecMinBufferSize];
+
+                            int ret = 0;
+                            while ((ret = inputStream.read(inputByte)) > 0){
+                                ByteBuffer.wrap(inputByte).order(ByteOrder.LITTLE_ENDIAN).asFloatBuffer().get(inputFloat);
+
+                                int result = acousticEchoCancellationUtils.aecProcess(aecID, inputFloat, inputFloat, outputFloat);
+                                Log.d(TAG, "result: " + result);
+
+                                ByteBuffer.wrap(outputByte).order(ByteOrder.LITTLE_ENDIAN).asFloatBuffer().put(outputFloat);
+                                outputStream.write(outputByte);
+                                outputStream.flush();
+                            }
+
+                            inputStream.close();
+                            outputStream.close();
+                        }
+
+                        acousticEchoCancellationUtils.aecFree(aecID);
+
+                    }catch (IOException e){
+                        e.printStackTrace();
+                    }
+                });
                 break;
             case R.id.aecmFileTest:
                 break;
