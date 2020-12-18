@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         noiseSuppressionUtils.nsInit(nsId, 16000);
                         noiseSuppressionUtils.nsSetPolicy(nsId, 2);
 
-                        int nsMinBufferSize = AudioEffectUtils.get10msBufferSizeInByte(16000, 2);
+                        int nsMinBufferSize = AudioEffectUtils.get10msBufferSizeInByte(16000);
 
                         short[] inputShort = new short[nsMinBufferSize/2];
                         short[] outputShort = new short[nsMinBufferSize/2];
@@ -165,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         long vadId = voiceActivityDetectionUtils.vadCreate();
                         voiceActivityDetectionUtils.vadInit(vadId);
                         voiceActivityDetectionUtils.vadSetMode(vadId, 3);
-                        int vadMinBufferSize = AudioEffectUtils.get10msBufferSizeInByte(16000, 2);
+                        int vadMinBufferSize = AudioEffectUtils.get10msBufferSizeInByte(16000);
                         short[] inputShort = new short[vadMinBufferSize/2];
 
                         for (File inFile : inFiles.listFiles()){
@@ -200,7 +200,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         automaticGainControl.agcInit(agcID, 2, 16000);
                         automaticGainControl.agcSetConfig(agcID, 9, 3);
 
-                        int agcMinBufferSize = AudioEffectUtils.get10msBufferSizeInByte(16000, 2);
+                        int agcMinBufferSize = AudioEffectUtils.get10msBufferSizeInByte(16000);
 
                         short[] inputShort = new short[agcMinBufferSize/2];
                         short[] outputShort = new short[agcMinBufferSize/2];
@@ -247,7 +247,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         acousticEchoCancellationUtils.aecInit(aecID, 16000);
                         acousticEchoCancellationUtils.aecSetConfig(aecID, 1);
 
-                        int aecMinBufferSize = AudioEffectUtils.get10msBufferSizeInByte(16000, 2);
+                        int aecMinBufferSize = AudioEffectUtils.get10msBufferSizeInByte(16000);
                         float[] inputFloat = new float[aecMinBufferSize/4];
                         float[] outputFloat = new float[aecMinBufferSize/4];
 
@@ -292,7 +292,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         long aecmID = acousticEchoCancellerMobileUtils.aecmCreate();
                         acousticEchoCancellerMobileUtils.aecmInit(aecmID, 16000);
                         acousticEchoCancellerMobileUtils.aecmSetConfig(aecmID, 2);
-                        int aecmMinBufferSize = AudioEffectUtils.get10msBufferSizeInByte(16000, 2);
+                        int aecmMinBufferSize = AudioEffectUtils.get10msBufferSizeInByte(16000);
                         short[] inputShort = new short[aecmMinBufferSize/2];
                         short[] outputShort = new short[aecmMinBufferSize/2];
                         for (File inFile : inFiles.listFiles()){
