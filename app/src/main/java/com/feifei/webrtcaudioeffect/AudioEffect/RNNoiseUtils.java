@@ -10,6 +10,6 @@ public class RNNoiseUtils {
     }
 
     public native long rnnoiseCreate();
-    public native int rnnoiseProcessFrame(long sts, float[] outPutBuffers, float[] inputBuffer);
+    public native int rnnoiseProcessFrame(long sts, short[] buffers);
     public native void rnnoiseDestroy(long sts);
 }

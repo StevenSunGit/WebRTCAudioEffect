@@ -339,30 +339,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                         RNNoiseUtils rnNoiseUtils = new RNNoiseUtils();
                         long rnNoiseUtilsId = rnNoiseUtils.rnnoiseCreate();
-                        int rnNoiseMinBufferSize = RNNoiseUtils.get10msBufferSizeInFloat(16000);
+                        int rnnoiseMinBufferSize = RNNoiseUtils.get10msBufferSizeInFloat(16000);
 
-                        float[] inputShort = new float[rnNoiseMinBufferSize];
-                        float[] outputShort = new float[rnNoiseMinBufferSize];
+                        short[] inputShort = new short[rnnoiseMinBufferSize];
+                        byte inputByte[] = new byte[rnnoiseMinBufferSize * 2];
 
                         for (File inFile : inFiles.listFiles()){
                             InputStream inputStream = new FileInputStream(inFile);
                             OutputStream outputStream = new FileOutputStream(outFiles.getAbsolutePath() + File.separator + inFile.getName());
 
-                            byte inputByte[] = new byte[rnNoiseMinBufferSize * 4];
-                            byte outputByte[] = new byte[rnNoiseMinBufferSize * 4];
-
                             int ret = 0;
                             while ((ret = inputStream.read(inputByte)) > 0){
-                                ByteBuffer.wrap(inputByte).order(ByteOrder.LITTLE_ENDIAN).asFloatBuffer().get(inputShort);
+                                ByteBuffer.wrap(inputByte).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().get(inputShort);
 
-                                rnNoiseUtils.rnnoiseProcessFrame(rnNoiseUtilsId, outputShort, inputShort);
+                                rnNoiseUtils.rnnoiseProcessFrame(rnNoiseUtilsId, inputShort);
 
-                                ByteBuffer.wrap(outputByte).order(ByteOrder.LITTLE_ENDIAN).asFloatBuffer().put(outputShort);
-                                outputStream.write(outputByte);
+                                ByteBuffer.wrap(inputByte).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().put(inputShort);
+                                outputStream.write(inputByte);
                                 outputStream.flush();
                             }
                         }
                         rnNoiseUtils.rnnoiseDestroy(rnNoiseUtilsId);
+                        Log.d(TAG, "finish rnnoise test");
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     } catch (IOException e) {
