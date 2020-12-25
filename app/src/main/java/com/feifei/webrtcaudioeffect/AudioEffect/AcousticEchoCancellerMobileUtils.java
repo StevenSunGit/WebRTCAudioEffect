@@ -5,6 +5,10 @@ public class AcousticEchoCancellerMobileUtils {
         System.loadLibrary("acoustic-echo-cancellion-mobile");
     }
 
+    public static int get10msBufferSizeInByte(int frequency){
+        return 10 * frequency / 1000 * 16 / 8;
+    }
+
     public native long aecmCreate();
     public native int aecmInit(long aecmID, int sampleRate);
     /* mode 0,1,2(default),3 */

@@ -5,6 +5,10 @@ public class NoiseSuppressionUtils {
         System.loadLibrary("noise-suppression");
     }
 
+    public static int get10msBufferSizeInByte(int frequency){
+        return 10 * frequency / 1000 * 16 / 8;
+    }
+
     public native long nsCreate();
 
     public native int nsInit(long nsHandler, int frequency);

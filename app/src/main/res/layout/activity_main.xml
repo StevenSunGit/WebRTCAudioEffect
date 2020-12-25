@@ -34,4 +34,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/aecmFileTest" />
+    <Button
+        android:text="RNNoise文件测试"
+        android:textAllCaps="false"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/rnnoiseFileTest" />
 </LinearLayout>

@@ -12,13 +12,14 @@ import android.widget.Button;
 
 import com.feifei.webrtcaudioeffect.AudioEffect.AcousticEchoCancellationUtils;
 import com.feifei.webrtcaudioeffect.AudioEffect.AcousticEchoCancellerMobileUtils;
-import com.feifei.webrtcaudioeffect.AudioEffect.AudioEffectUtils;
 import com.feifei.webrtcaudioeffect.AudioEffect.AutomaticGainControl;
 import com.feifei.webrtcaudioeffect.AudioEffect.NoiseSuppressionUtils;
+import com.feifei.webrtcaudioeffect.AudioEffect.RNNoiseUtils;
 import com.feifei.webrtcaudioeffect.AudioEffect.VoiceActivityDetectionUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private final int GrantCode = 1;
     private Button nsFileTest, vadFileTest, agcFileTest, aecFileTest, aecmFileTest;
+    private Button rnnoiseFileTest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +100,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         aecmFileTest = (Button)findViewById(R.id.aecmFileTest);
         aecmFileTest.setOnClickListener(this);
+
+        rnnoiseFileTest = (Button)findViewById(R.id.rnnoiseFileTest);
+        rnnoiseFileTest.setOnClickListener(this);
     }
 
     @Override
@@ -120,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         noiseSuppressionUtils.nsInit(nsId, 16000);
                         noiseSuppressionUtils.nsSetPolicy(nsId, 2);
 
-                        int nsMinBufferSize = AudioEffectUtils.get10msBufferSizeInByte(16000);
+                        int nsMinBufferSize = NoiseSuppressionUtils.get10msBufferSizeInByte(16000);
 
                         short[] inputShort = new short[nsMinBufferSize/2];
                         short[] outputShort = new short[nsMinBufferSize/2];
@@ -165,7 +170,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         long vadId = voiceActivityDetectionUtils.vadCreate();
                         voiceActivityDetectionUtils.vadInit(vadId);
                         voiceActivityDetectionUtils.vadSetMode(vadId, 3);
-                        int vadMinBufferSize = AudioEffectUtils.get10msBufferSizeInByte(16000);
+                        int vadMinBufferSize = VoiceActivityDetectionUtils.get10msBufferSizeInByte(16000);
                         short[] inputShort = new short[vadMinBufferSize/2];
 
                         for (File inFile : inFiles.listFiles()){
@@ -200,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         automaticGainControl.agcInit(agcID, 2, 16000);
                         automaticGainControl.agcSetConfig(agcID, 9, 3);
 
-                        int agcMinBufferSize = AudioEffectUtils.get10msBufferSizeInByte(16000);
+                        int agcMinBufferSize = AutomaticGainControl.get10msBufferSizeInByte(16000);
 
                         short[] inputShort = new short[agcMinBufferSize/2];
                         short[] outputShort = new short[agcMinBufferSize/2];
@@ -247,7 +252,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         acousticEchoCancellationUtils.aecInit(aecID, 16000);
                         acousticEchoCancellationUtils.aecSetConfig(aecID, 1);
 
-                        int aecMinBufferSize = AudioEffectUtils.get10msBufferSizeInByte(16000);
+                        int aecMinBufferSize = AcousticEchoCancellationUtils.get10msBufferSizeInByte(16000);
                         float[] inputFloat = new float[aecMinBufferSize/4];
                         float[] outputFloat = new float[aecMinBufferSize/4];
 
@@ -292,7 +297,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         long aecmID = acousticEchoCancellerMobileUtils.aecmCreate();
                         acousticEchoCancellerMobileUtils.aecmInit(aecmID, 16000);
                         acousticEchoCancellerMobileUtils.aecmSetConfig(aecmID, 2);
-                        int aecmMinBufferSize = AudioEffectUtils.get10msBufferSizeInByte(16000);
+                        int aecmMinBufferSize = AcousticEchoCancellerMobileUtils.get10msBufferSizeInByte(16000);
                         short[] inputShort = new short[aecmMinBufferSize/2];
                         short[] outputShort = new short[aecmMinBufferSize/2];
                         for (File inFile : inFiles.listFiles()){
@@ -318,6 +323,46 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                         acousticEchoCancellerMobileUtils.aecmFree(aecmID);
                     }catch (IOException e){
+                        e.printStackTrace();
+                    }
+                });
+                break;
+            case R.id.rnnoiseFileTest:
+                ExecutorService rnnoiseFileTest = Executors.newSingleThreadExecutor();
+                rnnoiseFileTest.execute(()->{
+                    try {
+                        File inFiles = new File(root + File.separator + "inFiles");
+                        File outFiles = new File(root + File.separator + "outFiles");
+
+                        RNNoiseUtils rnNoiseUtils = new RNNoiseUtils();
+                        long rnNoiseUtilsId = rnNoiseUtils.rnnoiseCreate();
+                        int rnNoiseMinBufferSize = RNNoiseUtils.get10msBufferSizeInFloat(16000);
+
+                        float[] inputShort = new float[rnNoiseMinBufferSize];
+                        float[] outputShort = new float[rnNoiseMinBufferSize];
+
+                        for (File inFile : inFiles.listFiles()){
+                            InputStream inputStream = new FileInputStream(inFile);
+                            OutputStream outputStream = new FileOutputStream(outFiles.getAbsolutePath() + File.separator + inFile.getName());
+
+                            byte inputByte[] = new byte[rnNoiseMinBufferSize * 4];
+                            byte outputByte[] = new byte[rnNoiseMinBufferSize * 4];
+
+                            int ret = 0;
+                            while ((ret = inputStream.read(inputByte)) > 0){
+                                ByteBuffer.wrap(inputByte).order(ByteOrder.LITTLE_ENDIAN).asFloatBuffer().get(inputShort);
+
+                                rnNoiseUtils.rnnoiseProcessFrame(rnNoiseUtilsId, outputShort, inputShort);
+
+                                ByteBuffer.wrap(outputByte).order(ByteOrder.LITTLE_ENDIAN).asFloatBuffer().put(outputShort);
+                                outputStream.write(outputByte);
+                                outputStream.flush();
+                            }
+                        }
+                        rnNoiseUtils.rnnoiseDestroy(rnNoiseUtilsId);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                 });

@@ -5,6 +5,10 @@ public class AcousticEchoCancellationUtils {
         System.loadLibrary("acoustic-echo-cancellation");
     }
 
+    public static int get10msBufferSizeInByte(int frequency){
+        return 10 * frequency / 1000 * 16 / 8;
+    }
+
     public native long aecCreate();
     public native int aecInit(long aecID, int sampleRate);
     /* mode: kAecNlpConservative = 0, kAecNlpModerate = 1(default), kAecNlpAggressive = 2 */

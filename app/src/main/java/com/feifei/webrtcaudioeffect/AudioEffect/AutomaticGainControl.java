@@ -5,6 +5,10 @@ public class AutomaticGainControl {
         System.loadLibrary("automatic-gain-control");
     }
 
+    public static int get10msBufferSizeInByte(int frequency){
+        return 10 * frequency / 1000 * 16 / 8;
+    }
+
     public native long agcCreate();
     /*agc模式：
       0 = kAgcModeUnchanged,

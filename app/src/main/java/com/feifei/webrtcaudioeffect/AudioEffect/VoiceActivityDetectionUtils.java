@@ -5,6 +5,10 @@ public class VoiceActivityDetectionUtils {
         System.loadLibrary("voice-activity-detection");
     }
 
+    public static int get10msBufferSizeInByte(int frequency){
+        return 10 * frequency / 1000 * 16 / 8;
+    }
+
     public native long vadCreate();
     public native int vadInit(long vadID);
     public native int vadSetMode(long vadID, int mode);
