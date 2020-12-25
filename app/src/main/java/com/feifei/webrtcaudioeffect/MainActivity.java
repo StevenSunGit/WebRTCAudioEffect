@@ -334,6 +334,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         File inFiles = new File(root + File.separator + "inFiles");
                         File outFiles = new File(root + File.separator + "outFiles");
 
+                        inFiles.mkdirs();
+                        outFiles.mkdirs();
+
                         RNNoiseUtils rnNoiseUtils = new RNNoiseUtils();
                         long rnNoiseUtilsId = rnNoiseUtils.rnnoiseCreate();
                         int rnNoiseMinBufferSize = RNNoiseUtils.get10msBufferSizeInFloat(16000);
