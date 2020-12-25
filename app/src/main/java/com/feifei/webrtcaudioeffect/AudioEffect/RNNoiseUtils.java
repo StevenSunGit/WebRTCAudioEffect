@@ -5,11 +5,11 @@ public class RNNoiseUtils {
         System.loadLibrary("rnnoise");
     }
 
-    public static int get10msBufferSizeInFloat(int frequency){
-        return 10 * frequency / 1000;
+    public static int get30msBufferSizeInFloat(int frequency){
+        return 30 * frequency / 1000;
     }
 
     public native long rnnoiseCreate();
-    public native int rnnoiseProcessFrame(long sts, short[] buffers);
+    public native int rnnoiseProcessFrame(long sts, short[] buffers, int size);
     public native void rnnoiseDestroy(long sts);
 }

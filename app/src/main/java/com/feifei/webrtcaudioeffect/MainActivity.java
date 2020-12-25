@@ -339,7 +339,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                         RNNoiseUtils rnNoiseUtils = new RNNoiseUtils();
                         long rnNoiseUtilsId = rnNoiseUtils.rnnoiseCreate();
-                        int rnnoiseMinBufferSize = RNNoiseUtils.get10msBufferSizeInFloat(16000);
+                        int rnnoiseMinBufferSize = RNNoiseUtils.get30msBufferSizeInFloat(16000);
 
                         short[] inputShort = new short[rnnoiseMinBufferSize];
                         byte inputByte[] = new byte[rnnoiseMinBufferSize * 2];
@@ -352,7 +352,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             while ((ret = inputStream.read(inputByte)) > 0){
                                 ByteBuffer.wrap(inputByte).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().get(inputShort);
 
-                                rnNoiseUtils.rnnoiseProcessFrame(rnNoiseUtilsId, inputShort);
+                                rnNoiseUtils.rnnoiseProcessFrame(rnNoiseUtilsId, inputShort, ret / 2);
 
                                 ByteBuffer.wrap(inputByte).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().put(inputShort);
                                 outputStream.write(inputByte);
