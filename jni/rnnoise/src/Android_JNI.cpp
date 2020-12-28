@@ -9,17 +9,10 @@ extern "C" JNIEXPORT jlong JNICALL Java_com_feifei_webrtcaudioeffect_AudioEffect
     return (jlong)sts;
 }
 
-extern "C" JNIEXPORT jint JNICALL Java_com_feifei_webrtcaudioeffect_AudioEffect_RNNoiseUtils_rnnoiseProcessFrame(JNIEnv *env,jobject thiz, jlong sts, jshortArray buffers, jint size){
-    jshort *buffer = env->GetShortArrayElements(buffers, nullptr);
-    float* x = (float*) malloc(sizeof(float) * size);
-    for (int i=0;i<size;i++) x[i] = buffer[i];
-
-    rnnoise_process_frame((DenoiseState *)sts, x, x);
-
-    for (int i=0;i<size;i++) buffer[i] = x[i];
-    env->ReleaseShortArrayElements(buffers, buffer, 0);
-
-    free(x);
+extern "C" JNIEXPORT jint JNICALL Java_com_feifei_webrtcaudioeffect_AudioEffect_RNNoiseUtils_rnnoiseProcessFrame(JNIEnv *env,jobject thiz, jlong sts, jfloatArray buffers){
+    jfloat *buffer = env->GetFloatArrayElements(buffers, nullptr);
+    rnnoise_process_frame((DenoiseState *)sts, buffer, buffer);
+    env->ReleaseFloatArrayElements(buffers, buffer, 0);
 
     return 0;
 }

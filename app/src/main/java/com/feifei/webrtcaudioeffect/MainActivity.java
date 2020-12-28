@@ -339,9 +339,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                         RNNoiseUtils rnNoiseUtils = new RNNoiseUtils();
                         long rnNoiseUtilsId = rnNoiseUtils.rnnoiseCreate();
-                        int rnnoiseMinBufferSize = RNNoiseUtils.get20msBufferSize(16000, 16);
 
-                        short[] inputShort = new short[rnnoiseMinBufferSize];
+                        int rnnoiseMinBufferSize = RNNoiseUtils.getMinBufferSize();
+
+                        float[] inputFloat = new float[rnnoiseMinBufferSize];
                         byte inputByte[] = new byte[rnnoiseMinBufferSize * 2];
 
                         for (File inFile : inFiles.listFiles()){
@@ -350,12 +351,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                             int ret = 0;
                             while ((ret = inputStream.read(inputByte)) > 0){
-                                ByteBuffer.wrap(inputByte).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().get(inputShort);
+                                ByteBuffer.wrap(inputByte).order(ByteOrder.LITTLE_ENDIAN).asFloatBuffer().get(inputFloat);
 
-                                rnNoiseUtils.rnnoiseProcessFrame(rnNoiseUtilsId, inputShort, ret / 2);
+                                rnNoiseUtils.rnnoiseProcessFrame(rnNoiseUtilsId, inputFloat);
 
-                                ByteBuffer.wrap(inputByte).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().put(inputShort);
-
+                                ByteBuffer.wrap(inputByte).order(ByteOrder.LITTLE_ENDIAN).asFloatBuffer().put(inputFloat);
                                 outputStream.write(inputByte, 0, ret);
                                 outputStream.flush();
                             }
