@@ -339,7 +339,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                         RNNoiseUtils rnNoiseUtils = new RNNoiseUtils();
                         long rnNoiseUtilsId = rnNoiseUtils.rnnoiseCreate();
-                        int rnnoiseMinBufferSize = RNNoiseUtils.get20msBufferSize(16000);
+                        int rnnoiseMinBufferSize = RNNoiseUtils.get20msBufferSize(16000, 16);
 
                         short[] inputShort = new short[rnnoiseMinBufferSize];
                         byte inputByte[] = new byte[rnnoiseMinBufferSize * 2];

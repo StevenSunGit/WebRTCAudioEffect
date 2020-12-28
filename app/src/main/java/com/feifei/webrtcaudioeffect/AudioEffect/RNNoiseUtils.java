@@ -5,8 +5,8 @@ public class RNNoiseUtils {
         System.loadLibrary("rnnoise");
     }
 
-    public static int get20msBufferSize(int frequency){
-        return 40 * frequency / 1000;
+    public static int get20msBufferSize(int frequency, int audioFramet){
+        return 10 * frequency / 1000 * audioFramet / 8;
     }
 
     public native long rnnoiseCreate();

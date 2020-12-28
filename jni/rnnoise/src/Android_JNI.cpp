@@ -18,6 +18,9 @@ extern "C" JNIEXPORT jint JNICALL Java_com_feifei_webrtcaudioeffect_AudioEffect_
 
     for (int i=0;i<size;i++) buffer[i] = x[i];
     env->ReleaseShortArrayElements(buffers, buffer, 0);
+
+    free(x);
+
     return 0;
 }
 
