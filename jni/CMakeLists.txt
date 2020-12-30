@@ -3,6 +3,7 @@ project(jni)
 
 add_subdirectory(automatic-gain-control)
 add_subdirectory(noise-suppression)
+add_subdirectory(noise-suppression-x)
 add_subdirectory(voice-activity-detection)
 add_subdirectory(acoustic-echo-cancellation)
 add_subdirectory(acoustic-echo-cancellion-mobile)
