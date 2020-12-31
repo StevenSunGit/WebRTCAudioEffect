@@ -23,13 +23,12 @@
 #define ALOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG,__VA_ARGS__)
 
 extern "C" JNIEXPORT jlong JNICALL Java_com_feifei_webrtcaudioeffect_AudioEffect_NoiseSuppressionXUtils_nsxCreate(JNIEnv *env, jobject thiz) {
-    NsxHandle *nsHandler = NULL;
-    WebRtcNsx_Create(&nsHandler);
+    NsxInst_t* nsHandler =WebRtcNsx_Create();
     return (long)nsHandler;
 }
 
 extern "C" JNIEXPORT jint JNICALL Java_com_feifei_webrtcaudioeffect_AudioEffect_NoiseSuppressionXUtils_nsxInit(JNIEnv *env, jobject thiz, jlong nsHandler, jint frequency) {
-    NsxHandle *handler = (NsxHandle *) nsHandler;
+    NsxInst_t *handler = (NsxInst_t *) nsHandler;
     if (handler == nullptr) {
         return -3;
     }
@@ -37,12 +36,12 @@ extern "C" JNIEXPORT jint JNICALL Java_com_feifei_webrtcaudioeffect_AudioEffect_
 }
 
 extern "C" JNIEXPORT jint JNICALL Java_com_feifei_webrtcaudioeffect_AudioEffect_NoiseSuppressionXUtils_nsxSetPolicy(JNIEnv *env,jobject thiz, jlong nsHandler, jint mode) {
-    NsxHandle *handler = (NsxHandle *) nsHandler;
+    NsxInst_t *handler = (NsxInst_t *) nsHandler;
     return WebRtcNsx_set_policy(handler, mode);
 }
 
 extern "C" JNIEXPORT jint JNICALL Java_com_feifei_webrtcaudioeffect_AudioEffect_NoiseSuppressionXUtils_nsxProcess(JNIEnv *env, jobject thiz, jlong nsHandler, jshortArray spframe, jint numBands, jshortArray outframe) {
-    NsxHandle *handler = (NsxHandle *) nsHandler;
+    NsxInst_t *handler = (NsxInst_t *) nsHandler;
     jshort *cspframe = env->GetShortArrayElements(spframe, nullptr);
     jshort *coutframe = env->GetShortArrayElements(outframe, nullptr);
 
@@ -72,7 +71,7 @@ extern "C" JNIEXPORT jint JNICALL Java_com_feifei_webrtcaudioeffect_AudioEffect_
 }
 
 extern "C" JNIEXPORT jint JNICALL Java_com_feifei_webrtcaudioeffect_AudioEffect_NoiseSuppressionXUtils_nsxFree(JNIEnv *env, jobject thiz, jlong nsHandler) {
-    NsxHandle *handler = (NsxHandle *) nsHandler;
+    NsxInst_t *handler = (NsxInst_t *) nsHandler;
     WebRtcNsx_Free(handler);
     return 0;
 }

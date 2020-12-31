@@ -12,6 +12,7 @@
 #define WEBRTC_MODULES_AUDIO_PROCESSING_NS_INCLUDE_NOISE_SUPPRESSION_X_H_
 
 #include "typedefs.h"
+#include "nsx_core.h"
 
 typedef struct NsxHandleT NsxHandle;
 
@@ -32,7 +33,7 @@ extern "C" {
  * Return value         :  0 - Ok
  *                        -1 - Error
  */
-int WebRtcNsx_Create(NsxHandle** nsxInst);
+NsxInst_t*  WebRtcNsx_Create();
 
 
 /*
@@ -45,7 +46,7 @@ int WebRtcNsx_Create(NsxHandle** nsxInst);
  * Return value         :  0 - Ok
  *                        -1 - Error
  */
-int WebRtcNsx_Free(NsxHandle* nsxInst);
+void WebRtcNsx_Free(NsxInst_t* nsxInst);
 
 
 /*
@@ -61,7 +62,7 @@ int WebRtcNsx_Free(NsxHandle* nsxInst);
  * Return value         :  0 - Ok
  *                        -1 - Error
  */
-int WebRtcNsx_Init(NsxHandle* nsxInst, uint32_t fs);
+int WebRtcNsx_Init(NsxInst_t* nsxInst, uint32_t fs);
 
 /*
  * This changes the aggressiveness of the noise suppression method.
@@ -76,7 +77,7 @@ int WebRtcNsx_Init(NsxHandle* nsxInst, uint32_t fs);
  * Return value         :  0 - Ok
  *                        -1 - Error
  */
-int WebRtcNsx_set_policy(NsxHandle* nsxInst, int mode);
+int WebRtcNsx_set_policy(NsxInst_t* nsxInst, int mode);
 
 /*
  * This functions does noise suppression for the inserted speech frame. The
@@ -96,11 +97,15 @@ int WebRtcNsx_set_policy(NsxHandle* nsxInst, int mode);
  * Return value         :  0 - OK
  *                        -1 - Error
  */
-int WebRtcNsx_Process(NsxHandle* nsxInst,
+int WebRtcNsx_Process(NsxInst_t* nsxInst,
                       short* speechFrame,
                       short* speechFrameHB,
                       short* outFrame,
                       short* outFrameHB);
+
+const uint32_t* WebRtcNsx_noise_estimate(const NsxInst_t* nsxInst);
+
+size_t WebRtcNsx_num_freq();
 
 #ifdef __cplusplus
 }
