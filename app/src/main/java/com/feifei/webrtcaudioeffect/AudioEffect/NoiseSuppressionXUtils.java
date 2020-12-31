@@ -5,8 +5,8 @@ public class NoiseSuppressionXUtils {
         System.loadLibrary("noise-suppression-x");
     }
 
-    public static int get10msBufferSizeInByte(int frequency){
-        return 10 * frequency / 1000 * 16 / 8;
+    public static int get10msBufferSizeInByte(int frequency, int audioFormat){
+        return 10 * frequency / 1000 * audioFormat / 8;
     }
 
     public native long nsxCreate();

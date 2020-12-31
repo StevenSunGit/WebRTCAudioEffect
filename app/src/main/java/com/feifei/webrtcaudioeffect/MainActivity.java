@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         noiseSuppressionUtils.nsInit(nsId, 16000);
                         noiseSuppressionUtils.nsSetPolicy(nsId, 2);
 
-                        int nsMinBufferSize = NoiseSuppressionUtils.get10msBufferSizeInByte(16000);
+                        int nsMinBufferSize = NoiseSuppressionUtils.get10msBufferSizeInByte(16000, 16);
 
                         short[] inputShort = new short[nsMinBufferSize/2];
                         short[] outputShort = new short[nsMinBufferSize/2];
@@ -180,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         noiseSuppressionXUtils.nsxInit(nsxId, 16000);
                         noiseSuppressionXUtils.nsxSetPolicy(nsxId, 2);
 
-                        int nsxMinBufferSize = NoiseSuppressionXUtils.get10msBufferSizeInByte(16000);
+                        int nsxMinBufferSize = NoiseSuppressionXUtils.get10msBufferSizeInByte(16000, 16);
 
                         short[] inputShort = new short[nsxMinBufferSize/2];
                         short[] outputShort = new short[nsxMinBufferSize/2];
