@@ -1,35 +1,92 @@
 cmake_minimum_required(VERSION 3.4.1)
 project(noise-suppression-x)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -Wall -std=c++11 -fexceptions -fpermissive -fpic")
-
 include_directories(inc)
-link_directories(${PROJECT_SOURCE_DIR}/libs/${ANDROID_ABI}/)
-link_directories($ENV{EXTRA_LIB_DIR})
+include_directories(src)
 
-aux_source_directory(src SOURCE_FILES)
-add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES})
+add_definitions(-DUNICODE)
+add_definitions(-D_UNICODE)
+add_definitions(-DV8_DEPRECATION_WARNINGS)
+add_definitions(-DCLD_VERSION=2)
+IF (WIN32)
+    add_definitions(-DWEBRTC_WIN)
+ELSE(WIN32)
+    add_definitions(-DWEBRTC_POSIX)
+ENDIF(WIN32)
+add_definitions(-DWEBRTC_INCLUDE_INTERNAL_AUDIO_DEVICE)
+add_definitions(-DNOMINMAX)
+add_definitions(-DPSAPI_VERSION=1)
+add_definitions(-D_CRT_RAND_S)
+add_definitions(-DCERT_CHAIN_PARA_HAS_EXTRA_FIELDS)
+add_definitions(-DWIN32_LEAN_AND_MEAN)
+add_definitions(-D_HAS_EXCEPTIONS=0)
+add_definitions(-D_WINSOCK_DEPRECATED_NO_WARNINGS)
+add_definitions(-DCHROMIUM_BUILD)
+add_definitions(-DCR_CLANG_REVISION=266460-1)
+add_definitions(-DUSE_AURA=1)
+add_definitions(-DUSE_DEFAULT_RENDER_THEME=1)
+add_definitions(-DUSE_LIBJPEG_TURBO=1)
+add_definitions(-DENABLE_WEBRTC=1)
+add_definitions(-DENABLE_MEDIA_ROUTER=1)
+add_definitions(-DENABLE_PEPPER_CDMS)
+add_definitions(-DENABLE_NOTIFICATIONS)
+add_definitions(-DENABLE_TOPCHROME_MD=1)
+add_definitions(-DFIELDTRIAL_TESTING_ENABLED)
+add_definitions(-DNO_TCMALLOC)
+add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
+add_definitions(-D_SCL_SECURE_NO_DEPRECATE)
+add_definitions(-DNTDDI_VERSION=0x0A000000)
+add_definitions(-D_USING_V110_SDK71_)
+add_definitions(-DENABLE_TASK_MANAGER=1)
+add_definitions(-DENABLE_EXTENSIONS=1)
+add_definitions(-DENABLE_PDF=1)
+add_definitions(-DENABLE_PLUGIN_INSTALLATION=1)
+add_definitions(-DENABLE_PLUGINS=1)
+add_definitions(-DENABLE_SESSION_SERVICE=1)
+add_definitions(-DENABLE_THEMES=1)
+add_definitions(-DENABLE_AUTOFILL_DIALOG=1)
+add_definitions(-DENABLE_PRINTING=1)
+add_definitions(-DENABLE_BASIC_PRINTING=1)
+add_definitions(-DENABLE_PRINT_PREVIEW=1)
+add_definitions(-DENABLE_SPELLCHECK=1)
+add_definitions(-DENABLE_CAPTIVE_PORTAL_DETECTION=1)
+add_definitions(-DENABLE_APP_LIST=1)
+add_definitions(-DENABLE_SETTINGS_APP=1)
+add_definitions(-DENABLE_SUPERVISED_USERS=1)
+add_definitions(-DENABLE_MDNS=1)
+add_definitions(-DENABLE_SERVICE_DISCOVERY=1)
+add_definitions(-DV8_USE_EXTERNAL_STARTUP_DATA)
+add_definitions(-DFULL_SAFE_BROWSING)
+add_definitions(-DSAFE_BROWSING_CSD)
+add_definitions(-DSAFE_BROWSING_DB_LOCAL)
+#add_definitions(-DWEBRTC_AUDIOPROC_DEBUG_DUMP)
+add_definitions(-DWEBRTC_NS_FLOAT)
+add_definitions(-DPROTOBUF_USE_DLLS)
+add_definitions(-DGOOGLE_PROTOBUF_NO_RTTI)
+add_definitions(-DGOOGLE_PROTOBUF_NO_STATIC_INITIALIZER)
+add_definitions(-DUSE_LIBPCI=1)
+add_definitions(-D__STDC_CONSTANT_MACROS)
+add_definitions(-D__STDC_FORMAT_MACROS)
+add_definitions(-DDYNAMIC_ANNOTATIONS_ENABLED=1)
+add_definitions(-DWTF_USE_DYNAMIC_ANNOTATIONS=1)
+add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE)
 
-# Searches for a specified prebuilt library and stores the path as a
-# variable. Because system libraries are included in the search path by
-# default, you only need to specify the name of the public NDK library
-# you want to add. CMake verifies that the library exists before
-# completing its build.
+file(GLOB_RECURSE FILES_SOURCES_C "src/*.c")
+file(GLOB_RECURSE FILES_SOURCES_CPP "src/*.cpp")
+file(GLOB_RECURSE FILES_INCLUDE "src/*.h" "inc/com_feifei_webrtcaudioeffect_jni_AudioEffect.h")
+
+ADD_LIBRARY(${PROJECT_NAME} SHARED ${FILES_INCLUDE} ${FILES_SOURCES_C} ${FILES_SOURCES_CPP})
 
 find_library( # Sets the name of the path variable.
-              log-lib
+        log-lib
 
-              # Specifies the name of the NDK library that
-              # you want CMake to locate.
-              log )
+        # Specifies the name of the NDK library that
+        # you want CMake to locate.
+        log )
 
-# Specifies libraries CMake should link to your target library. You
-# can link multiple libraries, such as libraries you define in the
-# build script, prebuilt third-party libraries, or system libraries.
+target_link_libraries( # 目标库
+        ${PROJECT_NAME}
 
-target_link_libraries( # Specifies the target library.
-                       ${PROJECT_NAME}
-
-                       # Links the target library to the log library
-                       # included in the NDK.
-                       ${log-lib})
+        # 目标库需要链接的库
+        # log-lib 是上面 find_library 指定的变量名
+        ${log-lib} )

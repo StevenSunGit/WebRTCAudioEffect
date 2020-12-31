@@ -2,11 +2,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #include "signal_processing_library.h"
 #include "noise_suppression_x.h"
 #include "noise_suppression.h"
 #include "gain_control.h"
+
 
 #ifndef nullptr
 #define nullptr 0
