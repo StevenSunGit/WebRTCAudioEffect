@@ -11,6 +11,12 @@
         android:layout_height="wrap_content"
         android:id="@+id/nsFileTest" />
     <Button
+        android:text="NSX文件测试"
+        android:textAllCaps="false"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/nsxFileTest" />
+    <Button
         android:text="VAD文件测试"
         android:textAllCaps="false"
         android:layout_width="wrap_content"

@@ -14,6 +14,7 @@ import com.feifei.webrtcaudioeffect.AudioEffect.AcousticEchoCancellationUtils;
 import com.feifei.webrtcaudioeffect.AudioEffect.AcousticEchoCancellerMobileUtils;
 import com.feifei.webrtcaudioeffect.AudioEffect.AutomaticGainControl;
 import com.feifei.webrtcaudioeffect.AudioEffect.NoiseSuppressionUtils;
+import com.feifei.webrtcaudioeffect.AudioEffect.NoiseSuppressionXUtils;
 import com.feifei.webrtcaudioeffect.AudioEffect.RNNoiseUtils;
 import com.feifei.webrtcaudioeffect.AudioEffect.VoiceActivityDetectionUtils;
 
@@ -35,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static String TAG = "AudioEffect";
 
     private final int GrantCode = 1;
-    private Button nsFileTest, vadFileTest, agcFileTest, aecFileTest, aecmFileTest;
+    private Button nsFileTest, nsxFiletest, vadFileTest, agcFileTest, aecFileTest, aecmFileTest;
     private Button rnnoiseFileTest;
 
     @Override
@@ -88,6 +89,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void grantPermission(){
         nsFileTest = (Button)findViewById(R.id.nsFileTest);
         nsFileTest.setOnClickListener(this);
+
+        nsxFiletest = (Button)findViewById(R.id.nsxFileTest);
+        nsxFiletest.setOnClickListener(this);
 
         vadFileTest = (Button)findViewById(R.id.vadFileTest);
         vadFileTest.setOnClickListener(this);
@@ -156,6 +160,57 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                         noiseSuppressionUtils.nsFree(nsId);
                         Log.d(TAG, "ns file test finish");
+                    }catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+                break;
+            case R.id.nsxFileTest:
+                ExecutorService nsxFileTest = Executors.newSingleThreadExecutor();
+                nsxFileTest.execute(()->{
+                    try {
+                        /* 消噪前文件夹 */
+                        File inFiles = new File(root + File.separator + "inFiles");
+                        /* 消噪后文件夹 */
+                        File outFiles = new File(root + File.separator + "outFiles");
+
+                        /* 配置NoiseSuppressionUtils */
+                        NoiseSuppressionXUtils noiseSuppressionXUtils = new NoiseSuppressionXUtils();
+                        long nsxId = noiseSuppressionXUtils.nsxCreate();
+                        noiseSuppressionXUtils.nsxInit(nsxId, 16000);
+                        noiseSuppressionXUtils.nsxSetPolicy(nsxId, 2);
+
+                        int nsxMinBufferSize = NoiseSuppressionXUtils.get10msBufferSizeInByte(16000);
+
+                        short[] inputShort = new short[nsxMinBufferSize/2];
+                        short[] outputShort = new short[nsxMinBufferSize/2];
+
+                        for (File inFile : inFiles.listFiles()){
+                            InputStream inputStream = new FileInputStream(inFile);
+                            OutputStream outputStream = new FileOutputStream(outFiles.getAbsolutePath() + File.separator + inFile.getName());
+
+                            byte inputByte[] = new byte[nsxMinBufferSize];
+                            byte outputByte[] = new byte[nsxMinBufferSize];
+                            int ret = 0;
+                            while ((ret = inputStream.read(inputByte)) > 0){
+                                /*字节转化*/
+                                ByteBuffer.wrap(inputByte).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().get(inputShort);
+
+                                /*送入模型*/
+                                noiseSuppressionXUtils.nsxProcess(nsxId, inputShort, 1, outputShort);
+
+                                /* 保存消噪效果 */
+                                ByteBuffer.wrap(outputByte).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().put(outputShort);
+                                outputStream.write(outputByte);
+                                outputStream.flush();
+                            }
+
+                            inputStream.close();
+                            outputStream.close();
+                        }
+
+                        noiseSuppressionXUtils.nsxFree(nsxId);
+                        Log.d(TAG, "nsx file test finish");
                     }catch (IOException e) {
                         e.printStackTrace();
                     }
