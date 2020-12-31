@@ -14,8 +14,6 @@
 #include "typedefs.h"
 #include "nsx_core.h"
 
-typedef struct NsxHandleT NsxHandle;
-
 #ifdef __cplusplus
 extern "C" {
 #endif

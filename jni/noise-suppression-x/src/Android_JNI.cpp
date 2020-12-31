@@ -23,7 +23,7 @@
 #define ALOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG,__VA_ARGS__)
 
 extern "C" JNIEXPORT jlong JNICALL Java_com_feifei_webrtcaudioeffect_AudioEffect_NoiseSuppressionXUtils_nsxCreate(JNIEnv *env, jobject thiz) {
-    NsxInst_t* nsHandler =WebRtcNsx_Create();
+    NsxInst_t* nsHandler = WebRtcNsx_Create();
     return (long)nsHandler;
 }
 

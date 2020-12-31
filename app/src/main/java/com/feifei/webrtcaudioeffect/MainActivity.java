@@ -180,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         noiseSuppressionXUtils.nsxInit(nsxId, 16000);
                         noiseSuppressionXUtils.nsxSetPolicy(nsxId, 2);
 
-                        int nsxMinBufferSize = NoiseSuppressionXUtils.get10msBufferSizeInByte(16000, 16);
+                        int nsxMinBufferSize = NoiseSuppressionXUtils.get20msBufferSizeInByte(16000, 16);
 
                         short[] inputShort = new short[nsxMinBufferSize/2];
                         short[] outputShort = new short[nsxMinBufferSize/2];
